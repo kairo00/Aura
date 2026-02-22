@@ -20,7 +20,8 @@ export function SocketProvider({ children }) {
             return;
         }
 
-        const socket = io('/', { auth: { token }, transports: ['websocket'] });
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const socket = io(API_URL, { auth: { token }, transports: ['websocket'] });
         socketRef.current = socket;
 
         socket.on('connect', () => setConnected(true));
