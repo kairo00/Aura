@@ -8,6 +8,7 @@
  * @returns {Promise<string>}
  */
 export function extractDominantColor(src, fallback = '#6366f1') {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     return new Promise((resolve) => {
         if (!src) return resolve(fallback)
 
@@ -53,6 +54,6 @@ export function extractDominantColor(src, fallback = '#6366f1') {
             }
         }
         img.onerror = () => resolve(fallback)
-        img.src = src
+        img.src = src.startsWith('http') ? src : `${API_URL}${src}`
     })
 }
