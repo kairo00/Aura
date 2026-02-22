@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { extractDominantColor } from '../utils/dominantColor'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
 function getColor(name) {
     if (!name) return COLORS[0]
@@ -182,9 +184,7 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
                             <div className="relative group cursor-pointer w-24 h-24 rounded-[1.5rem] transition-transform hover:scale-105 overflow-hidden"
                                 onClick={() => fileInputRef.current?.click()}
                                 style={{
-                                    background: icon ? `url('${import.meta.env.VITE_API_URL}${icon}') center/cover` : defaultBgColor,
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+                                    background: icon ? `url('${API_URL}${icon}') center/cover` : defaultBgColor,
                                     border: '1px solid rgba(255,255,255,0.1)',
                                     boxShadow: `0 8px 32px ${glowColor}66`
                                 }}>

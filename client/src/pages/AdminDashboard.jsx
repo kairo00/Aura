@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 function getColor(name) {
     const C = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
     if (!name) return C[0]
@@ -153,9 +155,7 @@ export default function AdminDashboard() {
                                             <td className="px-5 py-3.5">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
-                                                        style={u?.avatar_url ? { background: `url('${import.meta.env.VITE_API_URL}${u.avatar_url}?v=admin') center/cover`, color: 'transparent' } : { background: u?.avatar_color || getColor(u?.username) }}>
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+                                                        style={u?.avatar_url ? { background: `url('${API_URL}${u.avatar_url}?v=admin') center/cover`, color: 'transparent' } : { background: u?.avatar_color || getColor(u?.username) }}>
                                                         {!u?.avatar_url && u?.username?.slice(0, 1).toUpperCase()}
                                                     </div>
                                                     <div>

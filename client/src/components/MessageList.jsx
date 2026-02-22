@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom'
 import { useSocket } from '../context/SocketContext'
 import UserAvatar from './UserAvatar'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
 const EMOJIS = ['👍', '❤️', '😂', '🔥', '🎉', '👀']
 
@@ -244,9 +246,7 @@ export default function MessageList({ messages, user, token, hasMore, onLoadMore
                                 overflow: 'visible',
                                 zIndex: 10,
                                 background: profileUser?.avatar_url
-                                    ? `linear-gradient(140deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%), url('${import.meta.env.VITE_API_URL}${profileUser.avatar_url}?v=profile') center/cover`
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+                                    ? `linear-gradient(140deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%), url('${API_URL}${profileUser.avatar_url}?v=profile') center/cover`
                                     : `linear-gradient(140deg, ${(profileUser?.avatar_color || getColor(profileUser?.username))}70 0%, rgba(0,0,0,0.85) 100%)`,
                                 borderRadius: '1.5rem 1.5rem 0 0'
                             }}>
