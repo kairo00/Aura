@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
+// ✅ La variable magique : elle prend l'URL de Render, ou localhost si tu es sur ton Mac
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(() => localStorage.getItem('token'));
@@ -18,12 +21,13 @@ export function AuthProvider({ children }) {
     }, []);
 
     const login = async (username, password) => {
-        const res = await fetch('/api/auth/login', {
+        // ✅ On ajoute ${API_URL} devant la route
+        const res = await fetch(`${API_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
-        const data = await (async () => { const text = await res.text(); try { return JSON.parse(text); } catch(e) { console.error('JSON Error:', res.status, text.substring(0, 200)); throw e; } })();
+        const data = await (async () => { const text = await res.text(); try { return JSON.parse(text); } catch (e) { console.error('JSON Error:', res.status, text.substring(0, 200)); throw e; } })();
         if (!res.ok) throw new Error(data.error);
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
@@ -33,12 +37,13 @@ export function AuthProvider({ children }) {
     };
 
     const register = async (username, password) => {
-        const res = await fetch('/api/auth/register', {
+        // ✅ On ajoute ${API_URL} devant la route
+        const res = await fetch(`${API_URL}/api/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
-        const data = await (async () => { const text = await res.text(); try { return JSON.parse(text); } catch(e) { console.error('JSON Error:', res.status, text.substring(0, 200)); throw e; } })();
+        const data = await (async () => { const text = await res.text(); try { return JSON.parse(text); } catch (e) { console.error('JSON Error:', res.status, text.substring(0, 200)); throw e; } })();
         if (!res.ok) throw new Error(data.error);
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
