@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useSocket } from '../context/SocketContext'
 import UserAvatar from './UserAvatar'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 function getColor(name) {
     const C = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
     if (!name) return C[0]
@@ -19,9 +21,9 @@ export default function DMList({ selectedDM, onSelectDM, unread, token }) {
     const load = async () => {
         try {
             const [t, u] = await Promise.all([
-                fetch('/api/dm', { headers: { Authorization: `Bearer ${token}` } })
+                fetch(`${API_URL}/api/dm`, { headers: { Authorization: `Bearer ${token}` } })
                     .then(async r => JSON.parse(await r.text())),
-                fetch('/api/users', { headers: { Authorization: `Bearer ${token}` } })
+                fetch(`${API_URL}/api/users`, { headers: { Authorization: `Bearer ${token}` } })
                     .then(async r => JSON.parse(await r.text()))
             ])
             setThreads(Array.isArray(t) ? t : [])
@@ -33,7 +35,7 @@ export default function DMList({ selectedDM, onSelectDM, unread, token }) {
 
     const startDM = async (user) => {
         try {
-            const res = await fetch(`/api/dm/${user.id}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+            const res = await fetch(`${API_URL}/api/dm/${user.id}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
             const thread = JSON.parse(await res.text())
             setSearchOpen(false); setSearch('')
             load()

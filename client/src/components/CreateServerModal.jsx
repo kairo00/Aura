@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export default function CreateServerModal({ onClose, onCreate, token }) {
     const [name, setName] = useState('')
     const [iconUrl, setIconUrl] = useState('')
@@ -56,7 +58,7 @@ export default function CreateServerModal({ onClose, onCreate, token }) {
                             setUploading(true)
                             const fd = new FormData(); fd.append('image', file)
                             try {
-                                const res = await fetch('/api/channels/upload', {
+                                const res = await fetch(`${API_URL}/api/channels/upload`, {
                                     method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd
                                 })
                                 const data = JSON.parse(await res.text())

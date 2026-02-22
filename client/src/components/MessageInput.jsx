@@ -14,7 +14,7 @@ export default function MessageInput({ placeholder, onSend, onTyping, token, use
         setUploading(true)
         const fd = new FormData(); fd.append('image', file)
         try {
-            const res = await fetch('/api/channels/upload', {
+            const res = await fetch(`${API_URL}/api/channels/upload`, {
                 method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd
             })
             const data = JSON.parse(await res.text())
@@ -62,6 +62,8 @@ export default function MessageInput({ placeholder, onSend, onTyping, token, use
                     <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold text-white border"
                         style={user?.avatar_url ? {
                             background: `url('${import.meta.env.VITE_API_URL}${user.avatar_url.includes('?') ? user.avatar_url + '&v=user' : user.avatar_url + '?v=user'}') center/cover`,
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
                             color: 'transparent',
                             borderColor: 'rgba(255,255,255,0.07)'
                         } : {

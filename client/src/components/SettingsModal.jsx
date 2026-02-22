@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext'
 import { extractDominantColor } from '../utils/dominantColor'
 import UserAvatar, { avatarSrc } from './UserAvatar'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
 
 export default function SettingsModal({ onClose, token }) {
@@ -50,7 +52,7 @@ export default function SettingsModal({ onClose, token }) {
         fd.append('image', file)
 
         try {
-            const res = await fetch('/api/users/me/upload', {
+            const res = await fetch(`${API_URL}/api/users/me/upload`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
                 body: fd,
@@ -76,7 +78,7 @@ export default function SettingsModal({ onClose, token }) {
         setError('')
         setLoading(true)
         try {
-            const res = await fetch('/api/users/me', {
+            const res = await fetch(`${API_URL}/api/users/me`, {
                 method: 'PATCH',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 // Send the raw path stored in the DB (no query params, no absolute prefix)
@@ -100,7 +102,7 @@ export default function SettingsModal({ onClose, token }) {
     const deleteAccount = async () => {
         try {
             setLoading(true)
-            const res = await fetch('/api/users/me', {
+            const res = await fetch(`${API_URL}/api/users/me`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` },
             })

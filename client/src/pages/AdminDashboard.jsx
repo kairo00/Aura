@@ -24,8 +24,8 @@ export default function AdminDashboard() {
         setLoading(true); setError('')
         try {
             const [ur, sr] = await Promise.all([
-                fetch('/api/admin/users', { headers: { Authorization: `Bearer ${token}` } }),
-                fetch('/api/admin/servers', { headers: { Authorization: `Bearer ${token}` } })
+                fetch(`${API_URL}/api/admin/users`, { headers: { Authorization: `Bearer ${token}` } }),
+                fetch(`${API_URL}/api/admin/servers`, { headers: { Authorization: `Bearer ${token}` } })
             ])
             if (ur.status === 403) { navigate('/'); return }
             setUsers(await ur.json())
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
 
     const deleteUser = async (id) => {
         try {
-            const r = await fetch(`/api/admin/users/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+            const r = await fetch(`${API_URL}/api/admin/users/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
             const d = await r.json()
             if (!r.ok) throw new Error(d.error)
             setUsers(prev => prev.filter(u => u.id !== id))
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
 
     const deleteServer = async (id) => {
         try {
-            const r = await fetch(`/api/admin/servers/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+            const r = await fetch(`${API_URL}/api/admin/servers/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
             const d = await r.json()
             if (!r.ok) throw new Error(d.error)
             setServers(prev => prev.filter(s => s.id !== id))
@@ -154,6 +154,8 @@ export default function AdminDashboard() {
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
                                                         style={u?.avatar_url ? { background: `url('${import.meta.env.VITE_API_URL}${u.avatar_url}?v=admin') center/cover`, color: 'transparent' } : { background: u?.avatar_color || getColor(u?.username) }}>
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
                                                         {!u?.avatar_url && u?.username?.slice(0, 1).toUpperCase()}
                                                     </div>
                                                     <div>

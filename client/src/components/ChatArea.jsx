@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import MessageList from './MessageList'
 import MessageInput from './MessageInput'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export default function ChatArea({ channel, server, token, socket, user }) {
     const [messages, setMessages] = useState([])
     const [typing, setTyping] = useState([])
@@ -15,7 +17,7 @@ export default function ChatArea({ channel, server, token, socket, user }) {
         if (prevChannelId.current && socket) socket.emit('leave_channel', { channelId: prevChannelId.current })
         prevChannelId.current = channel.id
 
-        fetch(`/api/channels/${channel.id}/messages`, { headers: { Authorization: `Bearer ${token}` } })
+        fetch(`${API_URL}/api/channels/${channel.id}/messages`, { headers: { Authorization: `Bearer ${token}` } })
             .then(r => r.json()).then(data => {
                 const arr = Array.isArray(data) ? data : []
                 setMessages(arr.reverse())
@@ -89,7 +91,7 @@ export default function ChatArea({ channel, server, token, socket, user }) {
         setLoadingMore(true)
         try {
             const beforeId = messages[0].id
-            const res = await fetch(`/api/channels/${channel.id}/messages?before=${beforeId}`, { headers: { Authorization: `Bearer ${token}` } })
+            const res = await fetch(`${API_URL}/api/channels/${channel.id}/messages?before=${beforeId}`, { headers: { Authorization: `Bearer ${token}` } })
             const older = await res.json()
             if (older.length < 50) setHasMore(false)
             setMessages(prev => [...older.reverse(), ...prev])

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useSocket } from '../context/SocketContext'
 import UserAvatar from './UserAvatar'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export default function MemberListPanel({ server, token, currentUser }) {
     const { onlineUsers } = useSocket()
     const [members, setMembers] = useState([])
@@ -12,8 +14,8 @@ export default function MemberListPanel({ server, token, currentUser }) {
         if (!server?.id) return
         try {
             const [memRes, rolesRes] = await Promise.all([
-                fetch(`/api/servers/${server.id}/members`, { headers: { Authorization: `Bearer ${token}` } }),
-                fetch(`/api/servers/${server.id}/roles`, { headers: { Authorization: `Bearer ${token}` } })
+                fetch(`${API_URL}/api/servers/${server.id}/members`, { headers: { Authorization: `Bearer ${token}` } }),
+                fetch(`${API_URL}/api/servers/${server.id}/roles`, { headers: { Authorization: `Bearer ${token}` } })
             ])
             const mData = await memRes.json()
             const rData = await rolesRes.json()
@@ -141,7 +143,7 @@ function MemberRow({ member, isOnline, isSelf, server, token, currentUserPos, ro
         const roleId = e.target.value
         setBusy(true)
         try {
-            const res = await fetch(`/api/servers/${server.id}/members/${member.id}/role`, {
+            const res = await fetch(`${API_URL}/api/servers/${server.id}/members/${member.id}/role`, {
                 method: 'PUT',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ role_id: roleId ? parseInt(roleId) : null })
@@ -157,7 +159,7 @@ function MemberRow({ member, isOnline, isSelf, server, token, currentUserPos, ro
         if (busy || !confirm(`Kick ${member.username}?`)) return
         setBusy(true)
         try {
-            await fetch(`/api/servers/${server.id}/bans/kick/${member.id}`, {
+            await fetch(`${API_URL}/api/servers/${server.id}/bans/kick/${member.id}`, {
                 method: 'POST', headers: { Authorization: `Bearer ${token}` }
             })
             setMenu(false)
@@ -170,7 +172,7 @@ function MemberRow({ member, isOnline, isSelf, server, token, currentUserPos, ro
         if (reason === null) return // cancelled
         setBusy(true)
         try {
-            await fetch(`/api/servers/${server.id}/bans/${member.id}`, {
+            await fetch(`${API_URL}/api/servers/${server.id}/bans/${member.id}`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ reason })

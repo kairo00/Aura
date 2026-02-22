@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export default function JoinServer() {
     const { code } = useParams();
     const { token, user, loading: authLoading } = useAuth();
@@ -16,7 +18,7 @@ export default function JoinServer() {
     const handleJoin = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/servers/join/${code}`, {
+            const res = await fetch(`${API_URL}/api/servers/join/${code}`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` }
             });

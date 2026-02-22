@@ -3,6 +3,8 @@ import { useAuth } from '../context/AuthContext'
 import ServerSettingsModal from './ServerSettingsModal'
 import { extractDominantColor } from '../utils/dominantColor'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 // Deterministic fallback color palette keyed by server name
 const PALETTE = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
 function paletteColor(name) {
@@ -33,7 +35,7 @@ export default function Sidebar({ server, selectedChannel, onSelectChannel, unre
 
     const loadChannels = async () => {
         try {
-            const res = await fetch(`/api/servers/${server.id}/channels`, { headers: { Authorization: `Bearer ${token}` } })
+            const res = await fetch(`${API_URL}/api/servers/${server.id}/channels`, { headers: { Authorization: `Bearer ${token}` } })
             const data = JSON.parse(await res.text())
             setChannels(data)
             if (data.length > 0) {
@@ -64,7 +66,7 @@ export default function Sidebar({ server, selectedChannel, onSelectChannel, unre
         if (!newName.trim() || adding) return
         setAdding(true)
         try {
-            await fetch(`/api/servers/${server.id}/channels`, {
+            await fetch(`${API_URL}/api/servers/${server.id}/channels`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: newName.trim() })
@@ -76,7 +78,7 @@ export default function Sidebar({ server, selectedChannel, onSelectChannel, unre
 
     const copyInvite = async () => {
         try {
-            const res = await fetch(`/api/servers/${server.id}/invites`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+            const res = await fetch(`${API_URL}/api/servers/${server.id}/invites`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
             const data = JSON.parse(await res.text())
             if (data.code) {
                 navigator.clipboard.writeText(`${window.location.origin}/join/${data.code}`)
@@ -89,7 +91,7 @@ export default function Sidebar({ server, selectedChannel, onSelectChannel, unre
     const leaveServer = async () => {
         if (!window.confirm(`Are you sure you want to leave ${server.name}?`)) return
         try {
-            const res = await fetch(`/api/servers/${server.id}/members/me`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+            const res = await fetch(`${API_URL}/api/servers/${server.id}/members/me`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
             if (!res.ok) throw new Error((await res.json()).error)
             window.location.href = '/'
         } catch (e) { alert(e.message) }

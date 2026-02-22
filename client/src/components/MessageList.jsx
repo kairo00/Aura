@@ -33,7 +33,7 @@ export default function MessageList({ messages, user, token, hasMore, onLoadMore
 
     // Reaction API routes differ for DM vs channel
     const toggleReaction = async (messageId, emoji, hasReacted) => {
-        const base = isDM ? `/api/dm/${messageId}/reactions` : `/api/channels/${messageId}/reactions`
+        const base = isDM ? `${API_URL}/api/dm/${messageId}/reactions` : `${API_URL}/api/channels/${messageId}/reactions`
         const method = hasReacted ? 'DELETE' : 'POST'
         const url = hasReacted ? `${base}/${encodeURIComponent(emoji)}` : base
         try {
@@ -75,7 +75,7 @@ export default function MessageList({ messages, user, token, hasMore, onLoadMore
     const deleteMessage = useCallback(async (msgId) => {
         setContextMenu(null)
         try {
-            await fetch(`/api/channels/messages/${msgId}`, {
+            await fetch(`${API_URL}/api/channels/messages/${msgId}`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` }
             })
@@ -245,6 +245,8 @@ export default function MessageList({ messages, user, token, hasMore, onLoadMore
                                 zIndex: 10,
                                 background: profileUser?.avatar_url
                                     ? `linear-gradient(140deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%), url('${import.meta.env.VITE_API_URL}${profileUser.avatar_url}?v=profile') center/cover`
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
                                     : `linear-gradient(140deg, ${(profileUser?.avatar_color || getColor(profileUser?.username))}70 0%, rgba(0,0,0,0.85) 100%)`,
                                 borderRadius: '1.5rem 1.5rem 0 0'
                             }}>

@@ -12,6 +12,8 @@ import SettingsModal from '../components/SettingsModal'
 import CreateServerModal from '../components/CreateServerModal'
 import MemberListPanel from '../components/MemberListPanel'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export default function MainApp() {
     const { user, token } = useAuth()
     const { socket } = useSocket()
@@ -45,7 +47,7 @@ export default function MainApp() {
 
     const loadServers = async () => {
         try {
-            const res = await fetch('/api/servers', { headers: authHeader })
+            const res = await fetch(`${API_URL}/api/servers`, { headers: authHeader })
             const txt = await res.text()
             const data = JSON.parse(txt)
             setServers(data)
@@ -120,7 +122,7 @@ export default function MainApp() {
     }
 
     const handleCreateServer = async (name) => {
-        const res = await fetch('/api/servers', {
+        const res = await fetch(`${API_URL}/api/servers`, {
             method: 'POST',
             headers: { ...authHeader, 'Content-Type': 'application/json' },
             body: JSON.stringify({ name })

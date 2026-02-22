@@ -38,7 +38,7 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
     const loadRoles = async () => {
         setRolesLoading(true)
         try {
-            const r = await fetch(`/api/servers/${server.id}/roles`, { headers: { Authorization: `Bearer ${token}` } })
+            const r = await fetch(`${API_URL}/api/servers/${server.id}/roles`, { headers: { Authorization: `Bearer ${token}` } })
             setRoles(await r.json())
         } catch (e) { console.error(e) }
         finally { setRolesLoading(false) }
@@ -49,7 +49,7 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
     const createRole = async () => {
         if (!newRoleName.trim()) return
         try {
-            const r = await fetch(`/api/servers/${server.id}/roles`, {
+            const r = await fetch(`${API_URL}/api/servers/${server.id}/roles`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: newRoleName.trim(), color: newRoleColor })
@@ -66,7 +66,7 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
         // Optimistic update
         setRoles(prev => prev.map(r => r.id === role.id ? { ...r, [perm]: newVal } : r))
         try {
-            await fetch(`/api/servers/${server.id}/roles/${role.id}`, {
+            await fetch(`${API_URL}/api/servers/${server.id}/roles/${role.id}`, {
                 method: 'PATCH',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ [perm]: newVal })
@@ -78,7 +78,7 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
         if (!confirm('Delete this role?')) return
         setRoles(prev => prev.filter(r => r.id !== roleId))
         try {
-            await fetch(`/api/servers/${server.id}/roles/${roleId}`, {
+            await fetch(`${API_URL}/api/servers/${server.id}/roles/${roleId}`, {
                 method: 'DELETE', headers: { Authorization: `Bearer ${token}` }
             })
         } catch (e) { console.error(e); loadRoles() }
@@ -89,7 +89,7 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
         setError('')
         setLoading(true)
         try {
-            const res = await fetch(`/api/servers/${server.id}`, {
+            const res = await fetch(`${API_URL}/api/servers/${server.id}`, {
                 method: 'PATCH',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: name.trim() })
@@ -112,7 +112,7 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
         const fd = new FormData()
         fd.append('image', file)
         try {
-            const res = await fetch(`/api/servers/${server.id}/upload`, {
+            const res = await fetch(`${API_URL}/api/servers/${server.id}/upload`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
                 body: fd
@@ -133,7 +133,7 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
     const deleteServer = async () => {
         try {
             setLoading(true)
-            const res = await fetch(`/api/servers/${server.id}`, {
+            const res = await fetch(`${API_URL}/api/servers/${server.id}`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` }
             })
@@ -183,6 +183,8 @@ export default function ServerSettingsModal({ server, onClose, token, onUpdate }
                                 onClick={() => fileInputRef.current?.click()}
                                 style={{
                                     background: icon ? `url('${import.meta.env.VITE_API_URL}${icon}') center/cover` : defaultBgColor,
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
                                     border: '1px solid rgba(255,255,255,0.1)',
                                     boxShadow: `0 8px 32px ${glowColor}66`
                                 }}>
