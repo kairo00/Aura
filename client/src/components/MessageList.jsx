@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { useSocket } from '../context/SocketContext'
 import UserAvatar from './UserAvatar'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
 const EMOJIS = ['👍', '❤️', '😂', '🔥', '🎉', '👀']
@@ -27,6 +27,7 @@ function fmtLong(iso) {
 }
 
 export default function MessageList({ messages, user, token, hasMore, onLoadMore, loadingMore, isDM, onDeleteMessage, userRole }) {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     const bottomRef = useRef(null)
     const prevLastId = useRef(null)
     const { onlineUsers } = useSocket()
@@ -174,8 +175,8 @@ export default function MessageList({ messages, user, token, hasMore, onLoadMore
                                 )}
                                 {msg.attachment_url && (
                                     <div className="mt-2.5">
-                                        <a href={msg.attachment_url} target="_blank" rel="noreferrer">
-                                            <img src={msg.attachment_url} alt="attachment"
+                                        <a href={msg.attachment_url.startsWith('http') ? msg.attachment_url : `${API_URL}${msg.attachment_url}`} target="_blank" rel="noreferrer">
+                                            <img src={msg.attachment_url.startsWith('http') ? msg.attachment_url : `${API_URL}${msg.attachment_url}`} alt="attachment"
                                                 className="max-h-64 rounded-2xl border hover:opacity-100 transition-opacity"
                                                 style={{ borderColor: 'rgba(255,255,255,0.07)', opacity: 0.83 }} />
                                         </a>

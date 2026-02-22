@@ -4,11 +4,11 @@ import { useAuth } from '../context/AuthContext'
 import { extractDominantColor } from '../utils/dominantColor'
 import UserAvatar, { avatarSrc } from './UserAvatar'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
 
 export default function SettingsModal({ onClose, token }) {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     const { user, updateUser, logout } = useAuth()
     const navigate = useNavigate()
 

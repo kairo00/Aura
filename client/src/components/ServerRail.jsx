@@ -11,6 +11,7 @@ function paletteColor(name) {
 
 // Single server button with adaptive glow
 function ServerButton({ server, isActive, onClick, onMouseEnter, onMouseLeave }) {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     const [glow, setGlow] = useState(() => paletteColor(server.name))
 
     useEffect(() => {
@@ -52,7 +53,7 @@ function ServerButton({ server, isActive, onClick, onMouseEnter, onMouseLeave })
                 className={`rail-icon flex-shrink-0 text-xs font-semibold tracking-wide ${isActive ? 'active' : ''}`}
                 style={{
                     transition: 'box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease',
-                    ...(server.icon ? { background: `url(${server.icon}) center/cover`, color: 'transparent' } : {}),
+                    ...(server.icon ? { background: `url('${server.icon.startsWith('http') ? server.icon : `${API_URL}${server.icon}`}') center/cover`, color: 'transparent' } : {}),
                     ...(isActive ? activeStyle : inactiveStyle)
                 }}
             >

@@ -10,8 +10,6 @@
 import React from 'react'
 
 const PALETTE = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
-const API = import.meta.env.VITE_API_URL;
-
 function hashColor(name = '') {
     let h = 0
     for (const c of name) h = (h * 31 + c.charCodeAt(0)) & 0xffffffff
@@ -20,16 +18,18 @@ function hashColor(name = '') {
 
 /** Returns the canonical absolute URL for an avatar path */
 export function avatarSrc(avatar_url, cacheKey = '') {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     if (!avatar_url) return null
     // If already absolute, return as-is (with optional cache-bust)
     if (avatar_url.startsWith('http')) {
         return cacheKey ? `${avatar_url.split('?')[0]}?v=${cacheKey}` : avatar_url
     }
     const base = avatar_url.split('?')[0]
-    return cacheKey ? `${API}${base}?v=${cacheKey}` : `${API}${base}`
+    return cacheKey ? `${API_URL}${base}?v=${cacheKey}` : `${API_URL}${base}`
 }
 
 export default function UserAvatar({ user, size = 8, className = '', cacheKey = '' }) {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     const src = user?.avatar_url ? avatarSrc(user.avatar_url, cacheKey) : null
     const color = user?.avatar_color || hashColor(user?.username)
     const initials = (user?.username || '?').slice(0, 2).toUpperCase()

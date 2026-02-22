@@ -45,7 +45,7 @@ export default function MessageInput({ placeholder, onSend, onTyping, token, use
         <div className="px-5 pb-5 flex-shrink-0">
             {fileUrl && (
                 <div className="mb-3 relative inline-block">
-                    <img src={fileUrl} className="h-20 rounded-2xl border" alt="Preview"
+                    <img src={fileUrl.startsWith('http') ? fileUrl : `${API_URL}${fileUrl}`} className="h-20 rounded-2xl border" alt="Preview"
                         style={{ borderColor: 'rgba(255,255,255,0.07)', opacity: 0.8 }} />
                     <button onClick={() => setFileUrl(null)}
                         className="absolute -top-2 -right-2 w-6 h-6 rounded-full border flex items-center justify-center transition-colors"

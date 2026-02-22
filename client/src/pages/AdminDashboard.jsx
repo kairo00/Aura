@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 function getColor(name) {
     const C = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
@@ -10,8 +9,8 @@ function getColor(name) {
     let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) & 0xffffffff
     return C[Math.abs(h) % C.length]
 }
-
 export default function AdminDashboard() {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     const { user, token } = useAuth()
     const navigate = useNavigate()
     const [tab, setTab] = useState('users')
@@ -155,7 +154,7 @@ export default function AdminDashboard() {
                                             <td className="px-5 py-3.5">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
-                                                        style={u?.avatar_url ? { background: `url('${API_URL}${u.avatar_url}?v=admin') center/cover`, color: 'transparent' } : { background: u?.avatar_color || getColor(u?.username) }}>
+                                                        style={u?.avatar_url ? { background: `url('${u.avatar_url.startsWith('http') ? u.avatar_url : `${API_URL}${u.avatar_url}`}?v=admin') center/cover`, color: 'transparent' } : { background: u?.avatar_color || getColor(u?.username) }}>
                                                         {!u?.avatar_url && u?.username?.slice(0, 1).toUpperCase()}
                                                     </div>
                                                     <div>

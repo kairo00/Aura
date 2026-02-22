@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import ServerSettingsModal from './ServerSettingsModal'
 import { extractDominantColor } from '../utils/dominantColor'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // Deterministic fallback color palette keyed by server name
 const PALETTE = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#3b82f6']
@@ -14,6 +14,7 @@ function paletteColor(name) {
 }
 
 export default function Sidebar({ server, selectedChannel, onSelectChannel, unread, token, socket, pendingChannelId, onServerUpdated }) {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     const { user } = useAuth()
     const [channels, setChannels] = useState([])
     const [showAdd, setShowAdd] = useState(false)
@@ -107,7 +108,7 @@ export default function Sidebar({ server, selectedChannel, onSelectChannel, unre
         }
 
     const iconBgStyle = server.icon
-        ? { backgroundImage: `url(${server.icon})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+        ? { backgroundImage: `url('${server.icon.startsWith('http') ? server.icon : `${API_URL}${server.icon}`}')`, backgroundSize: 'cover', backgroundPosition: 'center' }
         : { background: dominantColor }
 
     // Glassmorphism action button style
